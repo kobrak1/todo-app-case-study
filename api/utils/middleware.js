@@ -2,6 +2,7 @@ const logger = require('./logger')
 const jwt = require('jsonwebtoken')
 const Todo = require('../models/todo')
 const User = require('../models/user')
+const { body } = require('express-validator')
 
 const reqLogger = (req, res, next) =>{
     logger.info('Method:', req.method)
@@ -19,7 +20,7 @@ const errorHandler = (error, req, res, next) => {
     console.error(error.message)
   
     if (error.name === 'CastError') {
-      return res.status(404).send({ error: 'malforatted id' })
+      return res.status(404).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
       return res.status(400).json({ error: error.message })
     } else if ( error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')) {
@@ -62,11 +63,18 @@ const todoExtractor = async (req, res, next) => {
     next()
 }
 
+const validateUser = [
+  body('name').notEmpty().withMessage('Name is required'),
+  body('email').isEmail().withMessage('Valid email is required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+]
+
 module.exports = {
     reqLogger,
     unknownEndpoint,
     errorHandler,
     tokenExtractor,
     userExtractor,
-    todoExtractor
+    todoExtractor,
+    validateUser,
 }

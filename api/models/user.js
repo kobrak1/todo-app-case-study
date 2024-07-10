@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now },
 })
 
-todoSchema.set('toJSON', {
+userSchema.set('toJSON', {
     transform: (doc, ret) => {
         ret.id = ret._id.toString()
         delete ret._id

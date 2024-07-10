@@ -20,6 +20,7 @@ const todoSchema = new mongoose.Schema({
         data: Buffer,
         contentType: String
     },
+    completed: { type: Boolean, default: false },
     updated_at: { type: Date, default: Date.now },
     created_at: { type: Date, default: Date.now },
 })
