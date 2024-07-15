@@ -5,6 +5,7 @@
 
     loginRouter.post('/', async (req, res) => {
         const { email, password } = req.body
+        console.log('HEYYYYY')
         const user = await User.findOne({ email })
         const isPasswordCorrect = user === null
             ? false

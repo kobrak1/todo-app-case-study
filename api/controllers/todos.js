@@ -8,7 +8,6 @@ const { userExtractor, todoExtractor, tokenExtractor } = require('../utils/middl
 todosRouter.get("/", userExtractor, async (req, res, next) => {
     try {
       const userId = req.user._id
-    
       const todos = await Todo.find({ user_id: userId }).populate('user_id', { name: 1, email: 1 })
       res.status(200).json(todos)
     } catch (exception) {

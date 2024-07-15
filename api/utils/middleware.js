@@ -36,19 +36,24 @@ const errorHandler = (error, req, res, next) => {
 
 const tokenExtractor = (req, res, next) => {
     const authorization = req.get('authorization')
-  
+    console.log('BURAK KARHAN:', authorization)
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
       const token = authorization.substring(7)
 
-      // decode the token got from req.body and assign it as 'req.token'
-      req.token = jwt.verify(token, process.env.SECRET_KEY)
-  
-      if (!req.token.id) {
-        return res.statusU(404).json({ error: 'token missing or invalid' })
+      try {
+        // decode the token got from req.body and assign it as 'req.token'
+        req.token = jwt.verify(token, process.env.SECRET_KEY)
+    
+        if (!req.token.id) {
+          return res.status(404).json({ error: 'Token missing or invalid' })
+        }
+      } catch (error) {
+        return res.status(401).json({ error: 'Token invalid or expired' })
       }
-  
-      next()
-    } else next()
+    } else {
+      req.token = null
+    }
+  next()
 }
 
 const userExtractor = async (req, res, next) => {
